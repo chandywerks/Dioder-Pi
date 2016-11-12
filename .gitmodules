@@ -1,0 +1,3 @@
+[submodule "vendor/wiringPi"]
+	path = vendor/wiringPi
+	url = git://git.drogon.net/wiringPi
