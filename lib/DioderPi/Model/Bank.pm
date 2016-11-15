@@ -13,11 +13,16 @@ has 'pins' => (
 	required => 1
 );
 
+has 'rgb' => (
+	is   => 'rw',
+	trigger => \&_rgb_set,
+	default => sub { [ 0, 0, 0 ] }
+);
+
 sub BUILD {
 	my ($self) = @_;
 
 	while( my ($color, $pin) = each( %{ $self->pins } ) ) {
-		warn "Init pin $pin...";
 		# Set pin to PWM_OUTPUT
 		$self->wpi->pin_mode( $pin, 2 );
 
@@ -25,12 +30,21 @@ sub BUILD {
 		$self->wpi->soft_pwm_create( $pin, 0, 255 );
 	}
 
-	# Set default color to blue
-	$self->set_rgb( 0, 0, 255 );
+	# Set init flag
+	$self->{init} = 1;
+
+	# Set the starting color
+	$self->rgb( $self->rgb );
 }
 
-sub set_rgb {
-	my ($self, $red, $green, $blue ) = @_;
+sub _rgb_set {
+	my ($self, $color) = @_;
+
+	# Bail if constructor value passed b/c pins haven't been initialzed yet
+	return unless $self->{init};
+
+	# Change the duty cycle of each color channel
+	my ($red, $green, $blue) = @{ $color };
 
 	$self->wpi->soft_pwm_write( $self->pins->{red}, $red );
 	$self->wpi->soft_pwm_write( $self->pins->{green}, $green );

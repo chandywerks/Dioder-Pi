@@ -23,11 +23,12 @@ sub register {
 
 	# Init each RGB bank
 	my $banks = $self->getConfig("banks");
-	while( my ($bank, $pins) = each( %{ $banks } ) ) {
-		$app->bank->{ $bank } = DioderPi::Model::Bank->new({
-			wpi  => $wpi,
-			pins => $pins
-		});
+	while( my ($bank, $args) = each( %{ $banks } ) ) {
+		# Add WiringPi interface to args
+		$args->{wpi} = $wpi;
+
+		# Init and register bank
+		$app->bank->{ $bank } = DioderPi::Model::Bank->new( $args );
 	}
 }
 1;

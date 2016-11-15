@@ -5,9 +5,8 @@ use Data::Dumper;
 
 sub index {
 	my ($self) = @_;
-warn "Bank A...";
-warn Dumper $self->bank->{a};
-	$self->render( text => "Dioder Pi" );
+
+	$self->render( text => "Dioder-Pi" );
 }
 
 1;
