@@ -1,12 +1,10 @@
 package DioderPi::Controller::Main;
 use Mojo::Base 'Mojolicious::Controller';
 
-use Data::Dumper;
-
 sub index {
-	my ($self) = @_;
+	my ($c) = @_;
 
-	$self->render( text => "Dioder-Pi" );
+	$c->render( text => "Dioder-Pi" );
 }
 
 1;
