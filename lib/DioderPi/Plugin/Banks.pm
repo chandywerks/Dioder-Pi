@@ -19,16 +19,15 @@ sub register {
 	$wpi->setup;
 
 	# Hash of RGB light bank modules
-	$app->helper( bank => sub { state $bank = {} } );
+	$app->helper( banks => sub { state $banks = {} } );
 
 	# Init each RGB bank
-	my $banks = $self->getConfig("banks");
-	while( my ($bank, $args) = each( %{ $banks } ) ) {
-		# Add WiringPi interface to args
-		$args->{wpi} = $wpi;
+	foreach my $bank ( @{ $self->getConfig("banks") } ) {
+		# Add WiringPi interface to bank args
+		$bank->{wpi} = $wpi;
 
 		# Init and register bank
-		$app->bank->{ $bank } = DioderPi::Model::Bank->new( $args );
+		$app->banks->{ $bank->{name} } = DioderPi::Model::Bank->new( $bank );
 	}
 }
 1;

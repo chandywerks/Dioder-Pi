@@ -8,6 +8,11 @@ has 'wpi' => (
 	required => 1
 );
 
+has 'name' => (
+	is => 'ro',
+	required => 1
+);
+
 has 'pins' => (
 	is => 'ro',
 	required => 1
@@ -35,6 +40,15 @@ sub BUILD {
 
 	# Set the starting color
 	$self->rgb( $self->rgb );
+}
+
+sub TO_JSON {
+	my ($self) = @_;
+
+	return {
+		"name" => $self->name,
+		"rgb"  => $self->rgb
+	};
 }
 
 sub _rgb_set {
