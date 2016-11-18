@@ -11,12 +11,80 @@
 		"/banks": {
 			"get": {
 				"x-mojo-to": "banks#list",
+				"description": "Array of banks",
 				"summary": "List all available RGB light banks and their current color value",
 				"responses": {
 					"200": {
 						"description": "Success",
 						"schema": {
 							"$ref": "#/definitions/banks"
+						}
+					}
+				}
+			}
+		},
+		"/bank/{name}": {
+			"get": {
+				"x-mojo-to": "banks#get_bank",
+				"description": "Get bank by name",
+				"summary": "Returns a single RGB light bank and it's current color value",
+				"parameters": [
+					{
+						"name": "name",
+						"in": "path",
+						"description": "Name of bank to return",
+						"type": "string",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Bank found",
+						"schema": {
+							"$ref": "#/definitions/bank"
+						}
+					},
+					"404": {
+						"description": "Bank not found",
+						"schema": {
+							"$ref": "#/definitions/errorResponse"
+						}
+					}
+				}
+			},
+			"put": {
+				"x-mojo-to": "banks#update_bank",
+				"description": "Update bank RGB value by name",
+				"summary": "Update the RGB color value of a bank and return the updated bank object",
+				"consumes": [ "application/json" ],
+				"parameters": [
+					{
+						"name": "name",
+						"in": "path",
+						"description": "Name of bank to update",
+						"type": "string",
+						"required": true
+					},
+					{
+						"name": "body",
+						"in": "body",
+						"description": "RGB value to write",
+						"schema": {
+							"$ref": "#/definitions/rgbValue"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Bank updated",
+						"schema": {
+							"$ref": "#/definitions/bank"
+						}
+					},
+					"404": {
+						"description": "Bank not found",
+						"schema": {
+							"$ref": "#/definitions/errorResponse"
 						}
 					}
 				}
@@ -47,13 +115,34 @@
 			"minItems": 3,
 			"maxItems": 3,
 			"items": {
-				"$ref": "#/definitions/colorChannel"
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 255
 			}
 		},
-		"colorChannel": {
-			"type": "integer",
-			"minimum": 0,
-			"maximum": 255
+		"errorResponse": {
+			"type": "object",
+			"required": [ "errors" ],
+			"properties": {
+				"errors": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": [ "status", "title", "detail" ],
+						"properties": {
+							"status": {
+								"type": "string"
+							},
+							"title": {
+								"type": "string"
+							},
+							"detail": {
+								"type": "string"
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
