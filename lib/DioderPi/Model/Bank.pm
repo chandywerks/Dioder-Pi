@@ -3,6 +3,11 @@ package DioderPi::Model::Bank;
 use Moo;
 use namespace::clean;
 
+use constant {
+	PWM_OUTPUT => 2,	# PWM OUTPUT MODE
+	PWM_MAX  => 128		# 12.8 ms period or 78.125 Hz
+};
+
 has 'wpi' => (
 	is  => 'ro',
 	required => 1
@@ -29,10 +34,10 @@ sub BUILD {
 
 	while( my ($color, $pin) = each( %{ $self->pins } ) ) {
 		# Set pin to PWM_OUTPUT
-		$self->wpi->pin_mode( $pin, 2 );
+		$self->wpi->pin_mode( $pin, PWM_OUTPUT );
 
 		# Init soft PWM thread
-		$self->wpi->soft_pwm_create( $pin, 0, 255 );
+		$self->wpi->soft_pwm_create( $pin, 0, PWM_MAX );
 	}
 
 	# Set init flag
@@ -60,9 +65,15 @@ sub _rgb_set {
 	# Change the duty cycle of each color channel
 	my ($red, $green, $blue) = @{ $color };
 
-	$self->wpi->soft_pwm_write( $self->pins->{red}, $red );
-	$self->wpi->soft_pwm_write( $self->pins->{green}, $green );
-	$self->wpi->soft_pwm_write( $self->pins->{blue}, $blue );
+	$self->wpi->soft_pwm_write( $self->pins->{red}, $self->_scale( $red ) );
+	$self->wpi->soft_pwm_write( $self->pins->{green}, $self->_scale( $green ) );
+	$self->wpi->soft_pwm_write( $self->pins->{blue}, $self->_scale( $blue ) );
+}
+
+# Scale the color value to the PWM range
+sub _scale {
+	my ($self, $color_value) = @_;
+	return int( PWM_MAX / 255 * $color_value );
 }
 
 1;
