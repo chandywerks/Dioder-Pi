@@ -2,10 +2,37 @@
 	{
 		"name": "a",
 		"pins": {
-			"red": 11,
+			"red": 8,
+			"green": 9,
+			"blue": 7
+		},
+		"rgb": [ 255, 0, 0 ]
+	},
+	{
+		"name": "b",
+		"pins": {
+			"red": 0,
+			"green": 2,
+			"blue": 3
+		},
+		"rgb": [ 0, 255, 0 ]
+	},
+	{
+		"name": "c",
+		"pins": {
+			"red": 12,
 			"green": 13,
-			"blue": 15
+			"blue": 14
 		},
 		"rgb": [ 0, 0, 255 ]
+	},
+	{
+		"name": "d",
+		"pins": {
+			"red": 8,
+			"green": 10,
+			"blue": 12
+		},
+		"rgb": [ 255, 255, 0 ]
 	}
 ]
