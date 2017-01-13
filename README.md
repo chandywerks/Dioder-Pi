@@ -12,3 +12,8 @@ Install wiringPi
 Install perl modules
     sudo apt-get install cpanminus
     cpanm --installdeps .
+
+Install javascript libraries
+
+    sudo apt-get install npm
+    npm install vue
