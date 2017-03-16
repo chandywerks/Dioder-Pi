@@ -89,6 +89,24 @@
 					}
 				}
 			}
+		},
+		"/patterns": {
+			"get": {
+				"x-mojo-to": "patterns#list",
+				"description": "Array of patterns",
+				"summary": "List of all available patterns",
+				"responses": {
+					"200": {
+						"description": "Sucess",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/pattern"
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"definitions": {
@@ -110,7 +128,49 @@
 				}
 			}
 		},
+		"pattern": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "integer",
+					"description": "Unique pattern id"
+				},
+				"name": {
+					"type": "string",
+					"description": "Pattern name"
+				},
+				"frames": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"rgb": {
+								"$ref": "#/definitions/rgbValue"
+							},
+							"duration": {
+								"description": "Frame duration in milliseconds",
+								"type": "integer"
+							},
+							"transition": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"description": "Transition in effect from previous frame",
+										"enum": [ "fade", "morph", "cut" ]
+									},
+									"duration": {
+										"description": "Transition duration in milliseconds",
+										"type": "integer"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"rgbValue": {
+			"description": "RGB color value",
 			"type": "array",
 			"minItems": 3,
 			"maxItems": 3,
